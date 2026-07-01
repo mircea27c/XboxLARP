@@ -33,7 +33,10 @@ isn't code-signed — click "More info" → "Run anyway".
 
 **XboxLARP does not touch Xbox Game Bar or Steam settings itself.** Both are known to
 intercept the Guide button system-wide before it ever reaches this (or any) app, so you have
-to disable that interception yourself first, or Guide-held chords won't register at all.
+to disable that interception yourself first, or Guide-held chords won't register at all. **If
+Steam is installed, step 2 below is mandatory even if it isn't running in the foreground** —
+Steam's controller hook runs in the background as long as Steam itself is running (including
+at startup, if you have it set to launch on login), whether or not you're actively using it.
 
 1. **Disable Xbox Game Bar's controller shortcut.** Try the simple toggle first: Settings →
    Gaming → Xbox Game Bar → turn off "Open Xbox Game Bar using this button on a controller".
@@ -50,10 +53,12 @@ to disable that interception yourself first, or Guide-held chords won't register
    ```
    This removes the Xbox Game Bar app for your user account (not the Xbox app/sign-in
    components — those are untouched and unrelated to the Guide button).
-2. **If you use Steam**, disable its competing Guide-button hook: Steam → Settings →
-   Controller → General Controller Settings → Show Advanced Settings → turn off "Guide button
-   focuses Steam" (and "Enable Guide Button Chords for controllers" if you don't want Steam's
-   own Guide+button shortcuts).
+2. **If Steam is installed, disable its Guide-button hook.** This is required, not optional —
+   even with Game Bar fully removed, Steam grabs the Guide button on its own and nothing in
+   step 1 affects it. Steam → Settings → Controller → General Controller Settings → Show
+   Advanced Settings → turn off **"Guide button focuses Steam"** (also turn off "Enable Guide
+   Button Chords for controllers" if you don't want Steam's own Guide+button shortcuts
+   competing too).
 3. Run `XboxLARP.exe`. It starts in the system tray (left-click the tray icon to open the
    window).
 4. In the main window: **Manage Monitors...** → pick which monitor is the dedicated game
