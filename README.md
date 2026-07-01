@@ -14,9 +14,12 @@ setups when naively enabling/disabling displays (see [How it works](#how-it-work
 
 - Windows 10/11
 - [Playnite](https://playnite.link/) installed, with Fullscreen mode available
-- An Xbox controller (wired, wireless receiver, or Bluetooth) — XInput-based controllers only
-  (PlayStation controllers work if bridged through DS4Windows or Steam Input's Xbox emulation,
-  not natively)
+- An Xbox controller — or any controller Windows sees as one. This app reads the standard
+  XInput API, so it can't tell a real Xbox controller apart from a **virtual** one. That means
+  PlayStation controllers work fine through **DS4Windows** or **Steam Input's Xbox
+  Configuration Support**, since both create a virtual XInput device — just make sure the PS
+  button is mapped to pass through as the Guide button in whichever tool you use. There's no
+  native (non-emulated) DirectInput/HID support for PlayStation controllers.
 
 ## Install
 
