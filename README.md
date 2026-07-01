@@ -31,9 +31,25 @@ isn't code-signed — click "More info" → "Run anyway".
 
 ## One-time setup
 
-1. **Disable Xbox Game Bar's controller shortcut**, otherwise the Guide button opens Game Bar
-   instead of reaching this app: Settings → Gaming → Xbox Game Bar → turn off "Open Xbox Game
-   Bar using this button on a controller".
+**XboxLARP does not touch Xbox Game Bar or Steam settings itself.** Both are known to
+intercept the Guide button system-wide before it ever reaches this (or any) app, so you have
+to disable that interception yourself first, or Guide-held chords won't register at all.
+
+1. **Disable Xbox Game Bar's controller shortcut.** Try the simple toggle first: Settings →
+   Gaming → Xbox Game Bar → turn off "Open Xbox Game Bar using this button on a controller".
+
+   If the Guide button *still* opens Game Bar after that (the toggle alone wasn't enough on
+   the machine this was built on), remove Game Bar's overlay components entirely. In an
+   elevated PowerShell:
+   ```powershell
+   Get-AppxPackage "*XboxGamingOverlay*" | Remove-AppxPackage
+   Get-AppxPackage "Microsoft.XboxGameOverlay" | Remove-AppxPackage
+   New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name "UseNexusForGameBarEnabled" -Value 0 -PropertyType DWord -Force
+   New-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\GameBar" -Name "AppCaptureEnabled" -Value 0 -PropertyType DWord -Force
+   New-ItemProperty -Path "HKCU:\System\GameConfigStore" -Name "GameDVR_Enabled" -Value 0 -PropertyType DWord -Force
+   ```
+   This removes the Xbox Game Bar app for your user account (not the Xbox app/sign-in
+   components — those are untouched and unrelated to the Guide button).
 2. **If you use Steam**, disable its competing Guide-button hook: Steam → Settings →
    Controller → General Controller Settings → Show Advanced Settings → turn off "Guide button
    focuses Steam" (and "Enable Guide Button Chords for controllers" if you don't want Steam's
