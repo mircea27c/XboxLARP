@@ -4,6 +4,10 @@
     <ProjectReference Include="..\MonitorTopology\MonitorTopology.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Sayers.SDL2.Core" Version="1.0.11" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net9.0-windows</TargetFramework>
@@ -15,5 +19,28 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <!-- Sayers.SDL2.Core bundles SDL2_image/mixer/ttf and their transitive codec DLLs, none of
+       which this app uses (only core SDL2.dll, for GameController input). Trim them so the
+       shipped exe folder isn't carrying ~15 unused native libraries. -->
+  <Target Name="TrimUnusedSdlLibs" BeforeTargets="AssignTargetPaths">
+    <ItemGroup>
+      <None Remove="@(None)" Condition="'%(Filename)%(Extension)' == 'SDL2_image.dll' or
+                                         '%(Filename)%(Extension)' == 'SDL2_mixer.dll' or
+                                         '%(Filename)%(Extension)' == 'SDL2_ttf.dll' or
+                                         '%(Filename)%(Extension)' == 'libFLAC-8.dll' or
+                                         '%(Filename)%(Extension)' == 'libjpeg-9.dll' or
+                                         '%(Filename)%(Extension)' == 'libmodplug-1.dll' or
+                                         '%(Filename)%(Extension)' == 'libmpg123-0.dll' or
+                                         '%(Filename)%(Extension)' == 'libogg-0.dll' or
+                                         '%(Filename)%(Extension)' == 'libopus-0.dll' or
+                                         '%(Filename)%(Extension)' == 'libopusfile-0.dll' or
+                                         '%(Filename)%(Extension)' == 'libpng16-16.dll' or
+                                         '%(Filename)%(Extension)' == 'libtiff-5.dll' or
+                                         '%(Filename)%(Extension)' == 'libvorbis-0.dll' or
+                                         '%(Filename)%(Extension)' == 'libwebp-7.dll' or
+                                         '%(Filename)%(Extension)' == 'zlib1.dll'" />
+    </ItemGroup>
+  </Target>
 
 </Project>

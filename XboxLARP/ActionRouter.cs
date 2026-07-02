@@ -55,6 +55,9 @@ public sealed class ActionRouter
 
     public void Process(XButton currentHeld, XButton pressedThisTick)
     {
+        if (pressedThisTick != XButton.None)
+            _log.Info($"Raw press: {pressedThisTick} (all held: {currentHeld})");
+
         var now = DateTime.UtcNow;
         foreach (var (binding, modMask, trigMask, action) in _compiled)
         {

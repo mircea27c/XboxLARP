@@ -11,7 +11,7 @@ public static class Listener
     /// there's no console to Ctrl+C).</summary>
     public static void RunLoop(ControllerConfig config, ILogSink log, Action<ActionType, string> onAction, Action<XButton> onEveryTick, CancellationToken cancellationToken = default, Action<bool>? onConnectionChanged = null)
     {
-        var poller = new ControllerPoller();
+        using var poller = new ControllerPoller();
         var router = new ActionRouter(config, log, onAction);
         bool ctrlCPressed = false;
         bool wasConnected = false;

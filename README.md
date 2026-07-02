@@ -14,12 +14,12 @@ setups when naively enabling/disabling displays (see [How it works](#how-it-work
 
 - Windows 10/11
 - [Playnite](https://playnite.link/) installed, with Fullscreen mode available
-- An Xbox controller — or any controller Windows sees as one. This app reads the standard
-  XInput API, so it can't tell a real Xbox controller apart from a **virtual** one. That means
-  PlayStation controllers work fine through **DS4Windows** or **Steam Input's Xbox
-  Configuration Support**, since both create a virtual XInput device — just make sure the PS
-  button is mapped to pass through as the Guide button in whichever tool you use. There's no
-  native (non-emulated) DirectInput/HID support for PlayStation controllers.
+- An Xbox controller — or any controller Windows sees as one. This app reads controllers via
+  SDL2's GameController API, which treats a real Xbox controller and a **virtual** XInput
+  device identically. That means PlayStation controllers work fine through **DS4Windows** or
+  **Steam Input's Xbox Configuration Support**, since both create a virtual XInput device —
+  just make sure the PS button is mapped to pass through as the Guide button in whichever tool
+  you use. There's no native (non-emulated) support for PlayStation controllers.
 
 ## Install
 
@@ -104,9 +104,16 @@ that by:
 - Verifying the result with a re-query + bounded retry after every apply, logged to
   `%LOCALAPPDATA%\XboxLARP\logs\controller.log`.
 
-The Guide button is read via `XInputGetStateEx` (an undocumented ordinal-100 export) since
-plain `XInputGetState` doesn't report it — this is the same technique most controller remap
-tools use; it's unofficial but has been stable for years.
+Controller input is read via **SDL2** (bundled, open source), not raw XInput. Earlier builds
+used `XInputGetStateEx` (an undocumented ordinal-100 export) to read the Guide button, since
+plain `XInputGetState` doesn't report it — that worked when launched manually but silently
+failed to register some chords when launched automatically at login, with zero diagnostic
+trail. Moving to SDL2's `SDL_CONTROLLER_BUTTON_GUIDE` (a first-class, documented value) fixed
+it outright. One real gotcha found in the process, in case it bites you too: SDL2's newer
+RawInput-based Windows joystick backend has a reproducible bug on some hardware where it reads
+high-index buttons (like Guide) correctly but silently drops low-index ones (A/B/X/Y) — this
+app explicitly disables that backend (`SDL_HINT_JOYSTICK_RAWINPUT=0`) in favor of the older,
+more battle-tested DirectInput/XInput backend.
 
 ## CLI (optional)
 

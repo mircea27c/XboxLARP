@@ -4,7 +4,8 @@ namespace XboxLARP;
 
 /// <summary>Registers/unregisters the app in the per-user Run key so it starts at login.
 /// No admin rights needed (unlike a Task Scheduler "run whether logged on or not" task),
-/// which matters since this has to work unattended on a normal login.</summary>
+/// which matters since this has to work unattended on a normal login. This is the same
+/// mechanism most comparable tray/background utilities use.</summary>
 public static class StartupManager
 {
     private const string RunKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
