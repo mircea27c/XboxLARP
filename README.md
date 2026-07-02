@@ -23,8 +23,9 @@ setups when naively enabling/disabling displays (see [How it works](#how-it-work
 
 ## Install
 
-Download the latest release exe from the [Releases](../../releases) page and run it — no
-installer, no .NET runtime required (self-contained single-file build).
+Download `XboxLARP.zip` from the [Releases](../../releases) page and unzip it somewhere
+permanent — it contains `XboxLARP.exe` and `SDL2.dll`, which must stay in the same folder.
+No installer, no .NET runtime required (self-contained build).
 
 Windows SmartScreen will likely flag it as an unrecognized publisher on first run since it
 isn't code-signed — click "More info" → "Run anyway".
@@ -128,11 +129,15 @@ switch without the GUI.
 dotnet build XboxLARP.sln
 ```
 
-Requires .NET 9 SDK. To produce a self-contained single-file release build:
+Requires .NET 9 SDK. To produce a self-contained release build:
 
 ```
 dotnet publish XboxLARP/XboxLARP.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 ```
+
+`SDL2.dll` (a native library, not a managed assembly) isn't picked up by the single-file
+bundler — copy it from `XboxLARP/bin/Release/net9.0-windows/win-x64/SDL2.dll` into the publish
+output folder alongside `XboxLARP.exe` before distributing.
 
 ## License
 
